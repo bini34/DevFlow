@@ -1,10 +1,10 @@
 
-function page() {
+function SignIn() {
   return (
     <div>
-      
+      signin
     </div>
   )
 }
 
-export default page
+export default SignIn
