@@ -1,10 +1,9 @@
-
-const Layout = ({ children }: {children:React.ReactNode}) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div>
+    <main className="flex min-h-screen w-full items-center justify-center bg-green-500">
       {children}
-    </div>
-  )
-}
+    </main>
+  );
+};
 
-export default Layout
+export default Layout;
