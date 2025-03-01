@@ -1,7 +1,7 @@
 import { SignIn } from "@clerk/nextjs"
 function Page() {
   return (
-    <SignIn signInFallbackRedirectUrl="/ask-question" />
+    <SignIn/>
   )
 }
 
