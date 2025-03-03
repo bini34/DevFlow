@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -18,9 +18,12 @@ import { Input } from "@/components/ui/input";
 import { QuestionSchema } from "@/lib/validations";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-
+import { createQuestion } from "@/lib/actions/question.action";
+const type: any = "create";
 export default function QuestionForm() {
   const editorRef = useRef<Editor | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const log = () => {
     if (editorRef.current) {
       console.log((editorRef.current as any).getContent());
@@ -36,11 +39,15 @@ export default function QuestionForm() {
   });
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof QuestionSchema>) {
-    console.log(process.env.NEXT_PUBLIC_TINY_API_KEY);
+    setIsSubmitting(true);
+   try{
+    createQuestion();
 
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+   }catch(e){
+   }
+   finally{
+    setIsSubmitting(false);
+   }
   }
   const handelInputkeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
@@ -113,6 +120,8 @@ export default function QuestionForm() {
                 <Editor
                   apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                   onInit={(_evt, editor) => (editorRef.current = editor)}
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => field.onChange(content)}
                   initialValue="<p>This is the initial content of the editor.</p>"
                   init={{
                     height: 350,
@@ -195,7 +204,18 @@ export default function QuestionForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          className="primary-gradient w-fit !text-light-900"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>{type === "edit" ? "Editting..." : "Posting..."} Question</>
+          ) : (
+            <>{type === "edit" ? "Edit Question" : "Ask a Question"}</>
+          )}
+          
+        </Button>
       </form>
     </Form>
   );
